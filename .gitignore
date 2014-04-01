@@ -11,3 +11,9 @@
 *.lai
 *.la
 *.a
+
+# Data files
+data/*/*.txt
+
+# Qt pro.user
+*.pro.user

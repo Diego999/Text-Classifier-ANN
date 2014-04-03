@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cassert>
 #include <cmath>
+#include <utility>
 
 struct TestSet{
     std::string op;
@@ -168,4 +169,37 @@ void testCreateSubSamples()
             }
         }
     }
+}
+
+void testKFoldCrossValidation()
+{
+    std::vector<std::pair<std::vector<double>, std::vector<double>>> trainingSet;
+    trainingSet.push_back(std::pair<std::vector<double>, std::vector<double>>({0.0, 0.0}, {0.1}));
+    trainingSet.push_back(std::pair<std::vector<double>, std::vector<double>>({1.0, 1.0}, {0.1}));
+
+    std::vector<std::pair<std::vector<double>, std::vector<double>>> validationSet;
+    validationSet.push_back(std::pair<std::vector<double>, std::vector<double>>({1.0, 0.0}, {0.9}));
+    validationSet.push_back(std::pair<std::vector<double>, std::vector<double>>({0.0, 1.0}, {0.9}));
+
+    ANNController ann({3}, 0.1, 0.1, trainingSet, validationSet);
+    ann.kFoldCrossValidation(
+    [&](long i, std::vector<double> &errT, std::vector<double>& errV)
+    {
+        auto it1 = errT.begin();
+        auto it2 = errV.begin();
+
+        while(it1 != errT.end() && it2 != errV.end())
+        {
+            std::cout << i << " " << *it1 << " " << *it2 << std::endl;
+            ++it1;
+            ++it2;
+        }
+    },
+    [&](long i, double err)
+        {
+            std::cout << "\t" << i << " " << err << std::endl << std::endl;
+        },
+    2
+    );
+
 }

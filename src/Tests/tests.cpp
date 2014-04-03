@@ -118,30 +118,6 @@ void testsANNController()
     delete annc2;
 }
 
-void testsANNMerge()
-{
-    ArtificialNeuralNetwork a1(2, 1, {1}, 0.1, 0.2);
-    ArtificialNeuralNetwork a2(2, 1, {1}, 0.3, 0.4);
-    a1.weight(0, 0, 0, 0.5);a1.weight(0, 0, 1, 1.0);a1.weight(1, 0, 0, 1.5);a1.threshold(0, 0, 2.0);a1.threshold(1, 0, 2.5);
-    a1.prevDeltaWeight(0, 0, 0, 0.5);a1.prevDeltaWeight(0, 0, 1, 1.0);a1.prevDeltaWeight(1, 0, 0, 1.5);a1.prevDeltaThreshold(0, 0, 2.0);a1.prevDeltaThreshold(1, 0, 2.5);
-    a2.weight(0, 0, 0, 3.0);a2.weight(0, 0, 1, 3.5);a2.weight(1, 0, 0, 4.0);a2.threshold(0, 0, 4.5);a2.threshold(1, 0, 5.0);
-    a2.prevDeltaWeight(0, 0, 0, 3.0);a2.prevDeltaWeight(0, 0, 1, 3.5);a2.prevDeltaWeight(1, 0, 0, 4.0);a2.prevDeltaThreshold(0, 0, 4.5);a2.prevDeltaThreshold(1, 0, 5.0);
-
-    ArtificialNeuralNetwork ann({a1,a2});
-    assert(ipp_utils::compare(ann.threshold(0, 0), 3.25));
-    assert(ipp_utils::compare(ann.threshold(1, 0), 3.75));
-    assert(ipp_utils::compare(ann.weight(0, 0, 0), 1.75));
-    assert(ipp_utils::compare(ann.weight(0, 0, 1), 2.25));
-    assert(ipp_utils::compare(ann.weight(1, 0, 0), 2.75));
-    assert(ipp_utils::compare(ann.prevDeltaThreshold(0, 0), 0.0));
-    assert(ipp_utils::compare(ann.prevDeltaThreshold(1, 0), 0.0));
-    assert(ipp_utils::compare(ann.prevDeltaWeight(0, 0, 0), 0.0));
-    assert(ipp_utils::compare(ann.prevDeltaWeight(0, 0, 1), 0.0));
-    assert(ipp_utils::compare(ann.prevDeltaWeight(1, 0, 0), 0.0));
-    assert(ipp_utils::compare(ann.learningRate(), 0.1));
-    assert(ipp_utils::compare(ann.momentum(), 0.2));
-}
-
 void testMergeVector()
 {
     std::vector<int> v({1,2,3,4,5,6,7,8,9,10});

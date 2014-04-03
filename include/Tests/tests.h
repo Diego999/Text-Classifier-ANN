@@ -3,7 +3,6 @@
 
 void testsANN();
 void testsANNController();
-void testsANNMerge();
 
 void testMergeVector();
 void testCreateSubSamples();

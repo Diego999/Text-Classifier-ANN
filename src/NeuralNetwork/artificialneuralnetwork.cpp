@@ -44,53 +44,6 @@ ArtificialNeuralNetwork::ArtificialNeuralNetwork(const ArtificialNeuralNetwork& 
         }
 }
 
-ArtificialNeuralNetwork::ArtificialNeuralNetwork(const std::vector<ArtificialNeuralNetwork>& anns)
-    :ArtificialNeuralNetwork(anns[0])
-{
-    mergeANNs(anns);
-}
-
-void ArtificialNeuralNetwork::mergeANNs(const std::vector<ArtificialNeuralNetwork>& anns)
-{
-    for(auto& ann:anns)
-    {
-        assert(ann.m_nbInputs == m_nbInputs);
-        assert(ann.m_nbOutputs == m_nbOutputs);
-        for(size_t i = 0; i < m_nbNeuronsPerHiddenLayer.size(); ++i)
-            assert(ann.m_nbNeuronsPerHiddenLayer[i] == m_nbNeuronsPerHiddenLayer[i]);
-    }
-
-    for(size_t i = 0; i < m_layers.size(); ++i)
-        for(size_t j = 0; j < m_layers[i]->neurons().size(); ++j)
-        {
-            double threshold = 0.0;
-            for(auto& ann:anns)
-                threshold += ann.m_layers[i]->neuron(j)->threshold();
-            threshold /= anns.size();
-            m_layers[i]->neuron(j)->threshold(threshold);
-            m_layers[i]->neuron(j)->prevDeltaThreshold(0.0);
-
-            for(int k = 0; k < m_layers[i]->neuron(j)->inputNb(); ++k)
-            {
-                double sum = 0.0;
-                for(auto& ann:anns)
-                    sum += ann.m_layers[i]->neuron(j)->weight(k);
-                sum /= anns.size();
-                m_layers[i]->neuron(j)->weight(k, sum);
-                m_layers[i]->neuron(j)->prevDeltaWeight(k, 0.0);
-            }
-        }
-}
-
-ArtificialNeuralNetwork::ArtificialNeuralNetwork(const std::vector<std::shared_ptr<ArtificialNeuralNetwork>>& _anns)
-    :ArtificialNeuralNetwork(*_anns[0])
-{
-    std::vector<ArtificialNeuralNetwork> anns;
-    for(auto& ann:_anns)
-        anns.push_back(*ann);
-    mergeANNs(anns);
-}
-
 ArtificialNeuralNetwork::~ArtificialNeuralNetwork()
 {
 

@@ -13,8 +13,6 @@ public:
     //The inputs is not consider as a layer !
     ArtificialNeuralNetwork(int nbInputs, int nbOutputs, const std::vector<int>& nbNeuronsPerHiddenLayer, double learningRate, double momentum);
     ArtificialNeuralNetwork(const ArtificialNeuralNetwork& ann);
-    ArtificialNeuralNetwork(const std::vector<ArtificialNeuralNetwork>& anns);
-    ArtificialNeuralNetwork(const std::vector<std::shared_ptr<ArtificialNeuralNetwork>>& anns);
     ~ArtificialNeuralNetwork();
 
     double learningRate() const {return m_learningRate;}
@@ -44,7 +42,6 @@ public:
     void prevDeltaThreshold(int numLayer, int numNeuron, double d);
 
 private:
-    void mergeANNs(const std::vector<ArtificialNeuralNetwork>& anns);
     void layerForward();
     double computeHiddenError();
     double computeOutputError();

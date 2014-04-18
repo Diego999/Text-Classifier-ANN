@@ -14,6 +14,8 @@
 
 # Data files
 data/*/*.txt
+data/tagged/*/*.txt
+*.7z
 
 # Qt pro.user
 *.pro.user

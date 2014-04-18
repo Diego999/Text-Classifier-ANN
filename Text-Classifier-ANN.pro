@@ -15,9 +15,10 @@ HEADERS += \
     include/NeuralNetwork/artificialneuralnetwork.h \
     include/NeuralNetwork/neuron.h \
     include/NeuralNetwork/neuronlayer.h \
-    include/Tests/tests.h \
     include/Utils/settings.h \
-    include/Utils/utils.h
+    include/Utils/utils.h \
+    include/Tests/tests.h \
+    include/Text/textcontroller.h
 
 SOURCES += \
     src/NeuralNetwork/anncontroller.cpp \
@@ -27,4 +28,5 @@ SOURCES += \
     src/Tests/tests.cpp \
     src/Utils/settings.cpp \
     src/Utils/utils.cpp \
-    src/main.cpp
+    src/main.cpp \
+    src/Text/textcontroller.cpp

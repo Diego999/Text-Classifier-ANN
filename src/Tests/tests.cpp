@@ -2,6 +2,7 @@
 #include "include/NeuralNetwork/artificialneuralnetwork.h"
 #include "include/NeuralNetwork/anncontroller.h"
 #include "include/Utils/utils.h"
+#include "include/Text/textcontroller.h"
 
 #include <string>
 #include <vector>
@@ -9,12 +10,23 @@
 #include <cassert>
 #include <cmath>
 #include <utility>
+#include <windows.h>
+
+using namespace std;
 
 struct TestSet{
     std::string op;
     double input1, input2;
     double target;
 };
+
+
+void testTextController()
+{
+    TextController tc("../Text-Classifier-ANN/data/tagged/");
+    std::vector<std::string> v = tc.importFiles();
+    std::cout << "Size of v is : " << v.size() << std::endl;
+}
 
 void testsANN()
 {

@@ -13,10 +13,12 @@ TextController::TextController(const std::string& dataFolderPath):
 {
 }
 
-//const std::vector<std::pair<std::vector<double>, std::vector<double>>>& TextController::getGlobalVector()
-//{
-//    return createGlobalVector(createGlobalMap(importFiles()));
-//}
+const std::vector<std::vector<double>> TextController::getGlobalVector()
+{
+   vector<string> files = importFiles();
+   vector<map<string, int>> map = createGlobalMap(files);
+   return createGlobalVector(map);
+}
 
 void TextController::addSubFolder(std::string folderName)
 {
@@ -99,7 +101,7 @@ const std::string TextController::readFile(string path)
  }
 
 
-const std::vector<std::map<std::string, int>> TextController::createGlobalMap(const std::vector<std::string>& fileVector)
+const std::vector<std::map<std::string, int>> TextController::createGlobalMap(const std::vector<std::string> fileVector)
 {
     vector<map<string, int>> vectorOfMap;
     map<string, int> localMap;
@@ -119,6 +121,30 @@ const std::vector<std::map<std::string, int>> TextController::createGlobalMap(co
     return vectorOfMap;
 }
 
-//const std::vector<std::pair<std::vector<double>, std::vector<double>>>& TextController::createGlobalVector(const std::vector<std::hash<std::string, int>>& globalMap)
-//{
-//}
+const std::vector<std::vector<double> > TextController::createGlobalVector(std::vector<std::map<string, int> >& globalMap)
+{
+    map<string, int> templateMap;
+    for(map<string,int> map : globalMap)
+    {
+        templateMap.insert(map.begin(), map.end());
+    }
+    resetToZero(templateMap);
+
+    vector<vector<double>> globalVector;
+    vector<double> localVector;
+    cout <<"Starting vector creation (takes a few minutes)" << endl;
+    for(map<string,int> map : globalMap)
+    {
+        map.insert(templateMap.begin(), templateMap.end());
+        for(auto& i : map) localVector.push_back(static_cast<double>(i.second));
+        globalVector.push_back(vector<double>(localVector));
+        resetToZero(templateMap);
+        localVector.clear();
+    }
+    return globalVector;
+}
+
+void TextController::resetToZero(std::map<string, int>& map)
+{
+    for(auto& i : map) i.second=0;
+}

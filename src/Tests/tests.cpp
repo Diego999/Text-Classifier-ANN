@@ -31,13 +31,40 @@ void testTextController()
     tc.addTag("NOM");
     tc.addTag("VER");
     tc.addTag("ADJ");
-    std::vector<std::map<std::string, int>> m = tc.createGlobalMap(tc.importFiles());
-    std::cout << "Size of m is : " << m.size() << std::endl;
 
-    for(auto it = m[0].cbegin(); it != m[0].cend(); ++it)
+    vector<map<string, int>> globalMap;
+    map<string, int> map1;
+    map<string, int> map2;
+
+    map1["A"]=1;
+    map1["B"]=2;
+    map1["C"]=3;
+    map1["D"]=4;
+
+    map2["W"]=11;
+    map2["X"]=12;
+    map2["Y"]=13;
+    map2["Z"]=14;
+
+    globalMap.push_back(map1);
+    globalMap.push_back(map2);
+
+    vector<vector<double>> v = tc.createGlobalVector(globalMap);
+    cout << "Size of v is : " << v.size() << std::endl;
+    cout << "Size of v[0] is : " << v[0].size() << std::endl;
+    cout << "Size of v[1] is : " << v[1].size() << std::endl;
+    cout << "Content of v :" << endl;
+    cout << "\t[0]\t[1]" << endl;
+    for(int i = 0; i < v[0].size(); ++i)
     {
-        std::cout << it->first << " " << it->second << "\n";
+        cout << "\t" << v[0][i] << "\t" << v[1][i] << endl;
     }
+
+    std::vector<std::vector<double>> gv = tc.getGlobalVector();
+    std::cout << "Size of gv is : " << gv.size() << std::endl;
+    std::cout << "Size of gv[0] is : " << gv[0].size() << std::endl;
+    cout << "|";
+    for(double d : gv[0]) cout << d << "|";
 }
 
 void testsANN()

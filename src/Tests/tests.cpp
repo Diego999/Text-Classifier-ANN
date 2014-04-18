@@ -11,6 +11,7 @@
 #include <cmath>
 #include <utility>
 #include <windows.h>
+#include <regex>
 
 using namespace std;
 
@@ -24,8 +25,19 @@ struct TestSet{
 void testTextController()
 {
     TextController tc("../Text-Classifier-ANN/data/tagged/");
-    std::vector<std::string> v = tc.importFiles();
-    std::cout << "Size of v is : " << v.size() << std::endl;
+    tc.addSubFolder("neg");
+    tc.addSubFolder("pos");
+
+    tc.addTag("NOM");
+    tc.addTag("VER");
+    tc.addTag("ADJ");
+    std::vector<std::map<std::string, int>> m = tc.createGlobalMap(tc.importFiles());
+    std::cout << "Size of m is : " << m.size() << std::endl;
+
+    for(auto it = m[0].cbegin(); it != m[0].cend(); ++it)
+    {
+        std::cout << it->first << " " << it->second << "\n";
+    }
 }
 
 void testsANN()

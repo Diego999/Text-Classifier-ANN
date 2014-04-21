@@ -20,12 +20,12 @@ const std::vector<std::vector<double>> TextController::getGlobalVector()
    return createGlobalVector(map);
 }
 
-void TextController::addSubFolder(std::string folderName)
+void TextController::addSubFolder(const string &folderName)
 {
     dataSubFolder.push_back(folderName);
 }
 
-void TextController::addTag(std::string tag)
+void TextController::addTag(const string &tag)
 {
     tagList.push_back(tag);
 }
@@ -33,7 +33,7 @@ void TextController::addTag(std::string tag)
 const std::vector<std::string> TextController::importFiles()
 {
     vector<string> files;
-    for (string folderName : dataSubFolder)
+    for (string& folderName : dataSubFolder)
     {
         cout << endl << "Import files from folder " << dataFolderPath + folderName;
         getFiles(files, (folderName + "/") );
@@ -42,7 +42,7 @@ const std::vector<std::string> TextController::importFiles()
     return files;
 }
 
-void TextController::getFiles(vector<string>& files, string prefix)
+void TextController::getFiles(vector<string>& files, const string &prefix)
 {
     string path = dataFolderPath + prefix + dataFilesIndex;
     QFile file( QString(path.c_str()) );
@@ -60,7 +60,7 @@ void TextController::getFiles(vector<string>& files, string prefix)
     file.close();
 }
 
-const std::string TextController::readFile(string path)
+const std::string TextController::readFile(const string& path)
 {
     QFile file( QString(path.c_str()) );
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -85,10 +85,10 @@ const std::string TextController::readFile(string path)
     return strFile;
 }
 
- bool TextController::keepLine(std::string line)
+ bool TextController::keepLine(const std::string& line)
  {
      bool flag = false;
-     for (string tag : tagList)
+     for (string& tag : tagList)
      {
          std::size_t found = line.find(tag);
          if (found!=std::string::npos)
@@ -101,13 +101,13 @@ const std::string TextController::readFile(string path)
  }
 
 
-const std::vector<std::map<std::string, int>> TextController::createGlobalMap(const std::vector<std::string> fileVector)
+const std::vector<std::map<std::string, int>> TextController::createGlobalMap(const std::vector<std::string>& fileVector)
 {
     vector<map<string, int>> vectorOfMap;
     map<string, int> localMap;
     string line;
 
-    for(string file : fileVector)
+    for(const string& file : fileVector)
     {
         localMap.clear();
         istringstream strstr(file);
@@ -121,10 +121,10 @@ const std::vector<std::map<std::string, int>> TextController::createGlobalMap(co
     return vectorOfMap;
 }
 
-const std::vector<std::vector<double> > TextController::createGlobalVector(std::vector<std::map<string, int> >& globalMap)
+const std::vector<std::vector<double> > TextController::createGlobalVector(const std::vector<std::map<string, int> > &globalMap)
 {
     map<string, int> templateMap;
-    for(map<string,int> map : globalMap)
+    for(const map<string,int>& map : globalMap)
     {
         templateMap.insert(map.begin(), map.end());
     }

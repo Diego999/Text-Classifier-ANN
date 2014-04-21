@@ -10,7 +10,7 @@
 #include <cassert>
 #include <cmath>
 #include <utility>
-#include <windows.h>
+#include <sstream>
 #include <regex>
 
 using namespace std;

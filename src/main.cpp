@@ -2,9 +2,10 @@
 
 int main(int argc, char* argv[])
 {
-    testKFoldCrossValidation();
-    testsANN();
+    //testKFoldCrossValidation();
+    //testsANN();
     //testsANNController();
+    testTextController();
 
     return 0;
 }

@@ -5,6 +5,7 @@
 #include <QTextStream>
 #include <stdexcept>
 #include <regex>
+#include <sstream>
 
 using namespace std;
 

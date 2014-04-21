@@ -46,41 +46,34 @@ const std::vector<std::string> TextController::importFiles()
 void TextController::getFiles(vector<string>& files, const string &prefix)
 {
     string path = dataFolderPath + prefix + dataFilesIndex;
-    QFile file( QString(path.c_str()) );
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        throw invalid_argument( "Unable to open file" );
-
-    QString line;
-    QTextStream in(&file);
-    in.setCodec("UTF-8");
-    while (!in.atEnd())
+    string line;
+    ifstream file (path);
+    if (file.is_open())
     {
-        line = in.readLine();
-        files.push_back(readFile(dataFolderPath + prefix + line.toLocal8Bit().constData()));
+        while ( getline (file,line) )
+        {
+            files.push_back(readFile(dataFolderPath + prefix + line));
+        }
     }
     file.close();
 }
 
 const std::string TextController::readFile(const string& path)
 {
-    QFile file( QString(path.c_str()) );
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        throw invalid_argument( "Unable to open file" );
-
-    QString line;
-    string strLine;
+    string line;
     string strFile = "";
-    QTextStream in(&file);
-    in.setCodec("UTF-8");
-    while (!in.atEnd())
+    ifstream file (path);
+    if (file.is_open())
     {
-        line = in.readLine();
-        strLine = line.toLocal8Bit().constData();
-        if (keepLine(strLine))
-        {
-            strFile.append(strLine);
-            strFile.append("\n");
-        }
+         while ( getline (file,line) )
+         {
+            if (keepLine(line))
+            {
+                strFile.append(line);
+                strFile.append("\n");
+            }
+         }
+        file.close();
     }
     file.close();
     return strFile;

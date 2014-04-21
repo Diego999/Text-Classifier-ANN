@@ -32,7 +32,7 @@ void testTextController()
     tc.addTag("VER");
     tc.addTag("ADJ");
 
-    vector<map<string, int>> globalMap;
+    vector<pair<map<string, int>,double>> globalMap;
     map<string, int> map1;
     map<string, int> map2;
 
@@ -46,25 +46,18 @@ void testTextController()
     map2["Y"]=13;
     map2["Z"]=14;
 
-    globalMap.push_back(map1);
-    globalMap.push_back(map2);
+    globalMap.push_back(make_pair(map1, 0.1));
+    globalMap.push_back(make_pair(map2, 0.9));
 
-    /*vector<vector<double>> v = tc.createGlobalVector(globalMap);
-    cout << "Size of v is : " << v.size() << std::endl;
-    cout << "Size of v[0] is : " << v[0].size() << std::endl;
-    cout << "Size of v[1] is : " << v[1].size() << std::endl;
-    cout << "Content of v :" << endl;
-    cout << "\t[0]\t[1]" << endl;
-    for(int i = 0; i < v[0].size(); ++i)
+    std::vector<std::pair<std::vector<double>, std::vector<double> > > v = tc.createGlobalVector(globalMap);
+    cout << "Size of vectors is : " << v[0].first.size() << std::endl;
+    cout << "vect:\t[0]\t[1]" << endl;
+    cout << "score:\t"<< v[0].second[0] <<"\t"<< v[1].second[0] << endl;
+
+    for(int i = 0; i < v[0].first.size(); ++i)
     {
-        cout << "\t" << v[0][i] << "\t" << v[1][i] << endl;
+        cout << "word " << i << "\t" << v[0].first[i] << "\t" << v[1].first[i] << endl;
     }
-
-    std::vector<std::vector<double>> gv = tc.getGlobalVector();
-    std::cout << "Size of gv is : " << gv.size() << std::endl;
-    std::cout << "Size of gv[0] is : " << gv[0].size() << std::endl;
-    cout << "|";
-    for(double d : gv[0]) cout << d << "|";*/
 }
 
 void testsANN()

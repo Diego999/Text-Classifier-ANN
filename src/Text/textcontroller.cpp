@@ -1,8 +1,6 @@
 #include "include/Text/textcontroller.h"
 #include <iostream>
 #include <fstream>
-#include <QFile>
-#include <QTextStream>
 #include <stdexcept>
 #include <regex>
 #include <sstream>

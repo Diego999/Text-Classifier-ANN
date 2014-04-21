@@ -8,7 +8,7 @@
 #include <string>
 #include <cassert>
 
-#define DEFAULT_ERROR 0.001
+#define DEFAULT_ERROR 15
 #define SPACE " "
 
 ANNController::ANNController(int nbInputs, int nbOutputs, const std::vector<int>& nbNeuronsPerHiddenLayer, double learningRate, double momentum):m_stopTraining(false)

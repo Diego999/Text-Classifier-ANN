@@ -49,7 +49,7 @@ void testTextController()
     globalMap.push_back(map1);
     globalMap.push_back(map2);
 
-    vector<vector<double>> v = tc.createGlobalVector(globalMap);
+    /*vector<vector<double>> v = tc.createGlobalVector(globalMap);
     cout << "Size of v is : " << v.size() << std::endl;
     cout << "Size of v[0] is : " << v[0].size() << std::endl;
     cout << "Size of v[1] is : " << v[1].size() << std::endl;
@@ -64,7 +64,7 @@ void testTextController()
     std::cout << "Size of gv is : " << gv.size() << std::endl;
     std::cout << "Size of gv[0] is : " << gv[0].size() << std::endl;
     cout << "|";
-    for(double d : gv[0]) cout << d << "|";
+    for(double d : gv[0]) cout << d << "|";*/
 }
 
 void testsANN()

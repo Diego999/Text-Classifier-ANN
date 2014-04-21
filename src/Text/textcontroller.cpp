@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <regex>
 #include <sstream>
+#include <utility>
 
 using namespace std;
 
@@ -12,10 +13,10 @@ TextController::TextController(const std::string& dataFolderPath):
 {
 }
 
-const std::vector<std::vector<double>> TextController::getGlobalVector()
+const std::vector<std::pair<std::vector<double>, std::vector<double> > > TextController::getGlobalVector()
 {
-   vector<string> files = importFiles();
-   vector<map<string, int>> map = createGlobalMap(files);
+   std::vector<std::pair<std::string,double>> files = importFiles();
+   vector<pair<map<string, int>,double>> map = createGlobalMap(files);
    return createGlobalVector(map);
 }
 
@@ -29,9 +30,9 @@ void TextController::addTag(const string &tag)
     tagList.push_back(tag);
 }
 
-const std::vector<std::string> TextController::importFiles()
+const std::vector<std::pair<std::string,double>> TextController::importFiles()
 {
-    vector<string> files;
+    vector<pair<string,double>> files;
     for (string& folderName : dataSubFolder)
     {
         cout << endl << "Import files from folder " << dataFolderPath + folderName;
@@ -41,16 +42,21 @@ const std::vector<std::string> TextController::importFiles()
     return files;
 }
 
-void TextController::getFiles(vector<string>& files, const string &prefix)
+void TextController::getFiles(std::vector<std::pair<string,double>>& files, const string &prefix)
 {
     string path = dataFolderPath + prefix + dataFilesIndex;
     string line;
+                                                 double score;
     ifstream file (path);
     if (file.is_open())
     {
+        if(prefix=="pos/")
+            score = 0.9;
+        else
+            score = 0.1;
         while ( getline (file,line) )
         {
-            files.push_back(readFile(dataFolderPath + prefix + line));
+            files.push_back(make_pair(readFile(dataFolderPath + prefix + line),score));
         }
     }
     file.close();
@@ -93,43 +99,43 @@ const std::string TextController::readFile(const string& path)
  }
 
 
-const std::vector<std::map<std::string, int>> TextController::createGlobalMap(const std::vector<std::string>& fileVector)
+const std::vector<std::pair<std::map<std::string, int>,double>> TextController::createGlobalMap(const std::vector<std::pair<std::string,double>>& fileVector)
 {
-    vector<map<string, int>> vectorOfMap;
+    std::vector<std::pair<std::map<std::string, int>,double>> vectorOfMap;
     map<string, int> localMap;
     string line;
 
-    for(const string& file : fileVector)
+    for(const auto& pair : fileVector)
     {
         localMap.clear();
-        istringstream strstr(file);
+        istringstream strstr(pair.first);
         while(getline(strstr, line))
         {
             unsigned found = line.rfind("\t");
             localMap[line.substr(found+1)]+=1;
         }
-        vectorOfMap.push_back(localMap);
+        vectorOfMap.push_back(make_pair(localMap,pair.second));
     }
     return vectorOfMap;
 }
 
-const std::vector<std::vector<double> > TextController::createGlobalVector(const std::vector<std::map<string, int> > &globalMap)
+const std::vector<std::pair<std::vector<double>,std::vector<double>>> TextController::createGlobalVector(const std::vector<std::pair<std::map<std::string, int>, double> > &globalMap)
 {
     map<string, int> templateMap;
-    for(const map<string,int>& map : globalMap)
+    for(const auto& pair : globalMap)
     {
-        templateMap.insert(map.begin(), map.end());
+        templateMap.insert(pair.first.begin(), pair.first.end());
     }
     resetToZero(templateMap);
 
-    vector<vector<double>> globalVector;
+    vector<pair<vector<double>,vector<double>>> globalVector;
     vector<double> localVector;
     cout <<"Starting vector creation (takes a few minutes)" << endl;
-    for(map<string,int> map : globalMap)
+    for(auto map : globalMap)
     {
-        map.insert(templateMap.begin(), templateMap.end());
-        for(auto& i : map) localVector.push_back(static_cast<double>(i.second));
-        globalVector.push_back(vector<double>(localVector));
+        map.first.insert(templateMap.begin(), templateMap.end());
+        for(auto& i : map.first) localVector.push_back(static_cast<double>(i.second));
+        globalVector.push_back(make_pair(vector<double>(localVector),vector<double>({map.second})));
         resetToZero(templateMap);
         localVector.clear();
     }

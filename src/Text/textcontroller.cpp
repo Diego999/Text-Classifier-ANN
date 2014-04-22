@@ -8,16 +8,30 @@
 
 using namespace std;
 
+const std::pair<std::string, double> TextController::posFolder = make_pair("pos/",0.9);
+const std::pair<std::string, double> TextController::negFolder = make_pair("neg/",0.1);
+
+
 TextController::TextController(const std::string& dataFolderPath):
     dataFolderPath(dataFolderPath), dataFilesIndex("files.index")
 {
 }
 
-const std::vector<std::pair<std::vector<double>, std::vector<double> > > TextController::getGlobalVector()
+const std::vector<std::pair<std::vector<double>, std::vector<double> > > TextController::getGlobalVector(const bool& canonic,const bool& verbose)
 {
-   std::vector<std::pair<std::string,double>> files = importFiles();
-   vector<pair<map<string, int>,double>> map = createGlobalMap(files);
-   return createGlobalVector(map);
+    if(verbose)
+    {
+        for (string& folderName : dataSubFolder)
+            cout << endl << "Import files from folder " << dataFolderPath + folderName;
+    }
+    // Imports files to vector of string
+    std::vector<std::pair<std::string,double>> files = importFiles();
+    if(verbose)cout << endl << files.size() <<  " files imported" << endl;
+    // Creates histograms for each file
+    vector<pair<map<string, int>,double>> map = createGlobalMap(files, canonic);
+    if(verbose)cout <<"Starting vector creation (takes a few minutes)" << endl;
+    // Creates the global vector
+    return createGlobalVector(map);
 }
 
 void TextController::addSubFolder(const string &folderName)
@@ -35,10 +49,8 @@ const std::vector<std::pair<std::string,double>> TextController::importFiles()
     vector<pair<string,double>> files;
     for (string& folderName : dataSubFolder)
     {
-        cout << endl << "Import files from folder " << dataFolderPath + folderName;
         getFiles(files, (folderName + "/") );
     }
-    cout << endl << files.size() <<  " files imported" << endl;
     return files;
 }
 
@@ -46,14 +58,17 @@ void TextController::getFiles(std::vector<std::pair<string,double>>& files, cons
 {
     string path = dataFolderPath + prefix + dataFilesIndex;
     string line;
-                                                 double score;
+    double score;
+    // Reads each file indexed in the dataFileIndex
     ifstream file (path);
     if (file.is_open())
     {
-        if(prefix=="pos/")
-            score = 0.9;
+        // Sets the score of the file 0.9 if po 0.1 if neg
+        if(prefix==posFolder.first)
+            score = posFolder.second;
         else
-            score = 0.1;
+            score = negFolder.second;
+        // Reads each file
         while ( getline (file,line) )
         {
             files.push_back(make_pair(readFile(dataFolderPath + prefix + line),score));
@@ -64,6 +79,7 @@ void TextController::getFiles(std::vector<std::pair<string,double>>& files, cons
 
 const std::string TextController::readFile(const string& path)
 {
+    // Appends each line to the strFile
     string line;
     string strFile = "";
     ifstream file (path);
@@ -88,6 +104,7 @@ const std::string TextController::readFile(const string& path)
      bool flag = false;
      for (string& tag : tagList)
      {
+         // keeps line if tag found on the line
          std::size_t found = line.find(tag);
          if (found!=std::string::npos)
          {
@@ -99,20 +116,30 @@ const std::string TextController::readFile(const string& path)
  }
 
 
-const std::vector<std::pair<std::map<std::string, int>,double>> TextController::createGlobalMap(const std::vector<std::pair<std::string,double>>& fileVector)
+const std::vector<std::pair<std::map<std::string, int>,double>> TextController::createGlobalMap(const std::vector<std::pair<std::string,double>>& fileVector, const bool& canonic)
 {
     std::vector<std::pair<std::map<std::string, int>,double>> vectorOfMap;
     map<string, int> localMap;
     string line;
 
+    // Turns the string file to an histogram as a map
     for(const auto& pair : fileVector)
     {
         localMap.clear();
         istringstream strstr(pair.first);
         while(getline(strstr, line))
         {
-            unsigned found = line.rfind("\t");
-            localMap[line.substr(found+1)]+=1;
+            // Canonic form
+            if(canonic)
+            {
+                unsigned found = line.rfind("\t");
+                localMap[line.substr(found+1)]+=1;
+            }
+            // Raw form
+            else {
+                unsigned found = line.find("\t");
+                localMap[line.substr(0,found)] +=1;
+            }
         }
         vectorOfMap.push_back(make_pair(localMap,pair.second));
     }
@@ -130,7 +157,7 @@ const std::vector<std::pair<std::vector<double>,std::vector<double>>> TextContro
 
     vector<pair<vector<double>,vector<double>>> globalVector;
     vector<double> localVector;
-    cout <<"Starting vector creation (takes a few minutes)" << endl;
+
     for(auto map : globalMap)
     {
         map.first.insert(templateMap.begin(), templateMap.end());

@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
         if(verbose)
         {
             std::cout << "Starting k fold cross validation with k = " << k << std::endl;
-            annController.kFoldCrossValidation(
+            std::cout << "Average of validation : " << annController.kFoldCrossValidation(
                     [&](long i, std::vector<double> &errT, std::vector<double>& errV)
                     {
                         auto it1 = errT.begin();
@@ -57,11 +57,11 @@ int main(int argc, char* argv[])
                             std::cout << "\t" << i << " " << err << std::endl << std::endl;
                         },
                     k
-                    );
+                    ); << std::endl;
         }
         else
         {
-            annController.kFoldCrossValidation([&](long i, std::vector<double> &errT, std::vector<double>& errV){;},[&](long i, double err){;},k);
+            std::cout << "Average of validation : " << annController.kFoldCrossValidation([&](long i, std::vector<double> &errT, std::vector<double>& errV){;},[&](long i, double err){;},k) << std::endl;
         }
     }
     else

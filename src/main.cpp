@@ -14,10 +14,10 @@ int main(int argc, char* argv[])
 
    if(argc == 1)
     {
-        std::cout << "Required argument data tagged folder path." << std::endl;
+        std::cout << std::endl << "Required argument data tagged folder path." << std::endl;
         std::cout << "The tagged folder must contains a neg and pos folder." << std::endl;
         std::cout << "Each subfolder must content a files.index with files names to import." << std::endl;
-        std::cout << "This index can be generated with fileListMaker.py" << std::endl;
+        std::cout << "This index can be generated with fileListMaker.py" << std::endl << std::endl;
         return 1;
     }
 

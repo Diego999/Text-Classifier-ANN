@@ -9,6 +9,7 @@ macx {
 }
 
 CONFIG +=c++11
+CONFIG +=console
 
 HEADERS += \
     include/NeuralNetwork/anncontroller.h \

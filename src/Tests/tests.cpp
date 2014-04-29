@@ -124,44 +124,6 @@ void testsANN()
     }
 }
 
-void testsANNController()
-{
-    std::string filepath = "testsANNController.ann";
-    std::vector<std::pair<std::vector<double>, std::vector<double>>> testSets;
-
-    testSets.push_back({{0,0},{0.1}});
-    testSets.push_back({{0,1},{0.9}});
-    testSets.push_back({{1,0},{0.9}});
-    testSets.push_back({{1,1},{0.1}});
-    ANNController* annc = new ANNController({3}, 0.5, 0.5,testSets, testSets);
-    annc->error(0.01);
-    std::cout << "Lambda function: " << std::endl;
-    std::function<void(long, double, double)> callback = [&](long iteration, double trainingError, double testingError)
-    {
-        std::cout << "iteration: " << iteration << " " << trainingError << " - " << testingError << std::endl;
-    };
-    std::vector<std::vector<double>> validationSets;
-
-    validationSets.push_back({0,0});
-    validationSets.push_back({0,1});
-    validationSets.push_back({1,0});
-    validationSets.push_back({1,1});
-
-    annc->train(callback);
-    annc->exportANN(filepath);
-    for(auto& result : annc->feedForward(validationSets))
-        std::cout << result[0] << std::endl;
-
-    ANNController* annc2 = new ANNController(filepath);
-    for(auto& result : annc2->feedForward(validationSets))
-        std::cout << result[0] << std::endl;
-
-    std::cout << annc->log();
-    std::cout << annc2->log();
-    delete annc;
-    delete annc2;
-}
-
 void testMergeVector()
 {
     std::vector<int> v({1,2,3,4,5,6,7,8,9,10});

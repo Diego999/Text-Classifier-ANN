@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
                             std::cout << "\t" << i << " " << err << std::endl << std::endl;
                         },
                     k
-                    ); << std::endl;
+                    );
         }
         else
         {

@@ -17,11 +17,9 @@ private:
 public:
     ANNController(const std::vector<int>& nbNeuronsPerHiddenLayer, double learningRate, double momentum, const std::vector<std::pair<std::vector<double>, std::vector<double>>>& trainingSet);
     ANNController(const std::vector<int>& nbNeuronsPerHiddenLayer, double learningRate, double momentum, const std::vector<std::pair<std::vector<double>, std::vector<double>>>& trainingSet, const std::vector<std::pair<std::vector<double>, std::vector<double>>>& validationSet);
-    ANNController(const std::string& filepath);
-    ANNController(const std::string& filepath, const std::vector<std::pair<std::vector<double>, std::vector<double>>>& trainingSet);
-    ANNController(const std::string& filepath, const std::vector<std::pair<std::vector<double>, std::vector<double>>>& trainingSet, const std::vector<std::pair<std::vector<double>, std::vector<double>>>& validationSet);
 
     void train(const std::function<void(long, double, double)> &callback);
+    //Compute the percentage of success
     double test(const std::vector<std::pair<std::vector<double>, std::vector<double>>>& set) const;
     double kFoldCrossValidation(const std::function<void (long, std::vector<double>&, std::vector<double>&)> &callback, const std::function<void (long, double)> &callbackFinalANN, const unsigned int k);
     void stopTraining() {m_stopTraining = true;}
@@ -29,16 +27,12 @@ public:
     const std::vector<double>& feedForward(const std::vector<double>& dataInputs);
     std::vector<std::vector<double>> feedForward(const std::vector<std::vector<double>>& dataInputs);
     std::vector<double> weights(int numLayer, int numNeuron) const;
-    void exportANN(const std::string& filepath);
 
     double error() const { return m_error; }
 
     void error(double error) { m_error = error; }
 
-    std::string log() const;
-
 private:
-    void importANN(const std::string& filepath);
     void createANN(int nbInputs, int nbOutputs, const std::vector<int>& nbNeuronsPerHiddenLayer, double learningRate, double momentum);
     void createANN(const ArtificialNeuralNetwork& ann);
 

@@ -4,7 +4,6 @@
 void testTextController();
 
 void testsANN();
-void testsANNController();
 
 void testMergeVector();
 void testCreateSubSamples();

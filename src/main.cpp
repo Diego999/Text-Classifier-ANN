@@ -12,7 +12,16 @@ int main(int argc, char* argv[])
     bool verbose = true;
     const unsigned int k = 5;
 
-    TextController tc("../Text-Classifier-ANN/data/tagged/");
+   if(argc == 1)
+    {
+        std::cout << "Required argument data tagged folder path." << std::endl;
+        std::cout << "The tagged folder must contains a neg and pos folder." << std::endl;
+        std::cout << "Each subfolder must content a files.index with files names to import." << std::endl;
+        std::cout << "This index can be generated with fileListMaker.py" << std::endl;
+        return 1;
+    }
+
+    TextController tc(argv[1]);
     tc.addSubFolder("neg");
     tc.addSubFolder("pos");
 
